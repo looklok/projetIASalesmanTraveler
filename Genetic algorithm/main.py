@@ -117,16 +117,16 @@ def croisement(parent1, parent2):
     borne2 = int(random.random() * parent1.tailleIndividu())
 
     for i in range(0, enfant.tailleIndividu()):
-        if borne1 < borne2 and i > borne1 and i < borne2:
+        if borne1 < borne2 and borne1 < i < borne2:
             enfant.setVille(i, parent1.getVille(i))
         elif borne1 > borne2:
-            if not (i < borne1 and i > borne2):
+            if not (borne1 > i > borne2):
                 enfant.setVille(i, parent1.getVille(i))
 
     for i in range(0, parent2.tailleIndividu()):
         if not enfant.contientVille(parent2.getVille(i)):
             for ii in range(0, enfant.tailleIndividu()):
-                if enfant.getVille(ii) == None:
+                if enfant.getVille(ii) is None:
                     enfant.setVille(ii, parent2.getVille(i))
                     break
     return enfant
@@ -229,9 +229,6 @@ def choix():
     fen.mainloop()
 
 
-
-
-
 if __name__ == '__main__':
 
     # Creation d un ensemble de villes
@@ -246,9 +243,8 @@ if __name__ == '__main__':
     bouton_choix.pack(side=RIGHT, padx=70)
     fenetre.mainloop()
 
-    if (choix == 2):
+    if choix == 2:
         villes_aleatoires()
-
 
     # on initialise la population avec 20 circuits
     pop = Population(nbpops, True)
