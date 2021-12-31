@@ -66,13 +66,8 @@ def test():
     print(tsp.stateCost(tsp.initialState))
 
 
-<<<<<<< HEAD
 def main() :
     num_cities = 9
-=======
-def main():
-    num_cities = 10
->>>>>>> 3cc9e9bea3bcf43cae38e1277e73736ed2ad3d64
     matrice = generateInstance(
         num_cities=num_cities, borne_inf=1, borne_sup=20
     )

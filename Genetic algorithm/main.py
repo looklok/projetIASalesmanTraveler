@@ -188,7 +188,7 @@ def setNbvillesAComparer(var):
 def choix():
     global choix
     choix = 2
-    fenetre.destroy()
+    #fenetre.destroy()
     fen = Tk()
     cadre2 = Frame(fen, padx="500", height=500, borderwidth=1)
 
@@ -235,16 +235,17 @@ if __name__ == '__main__':
     Villes = []
     distancesTots = []
 
-    fenetre = Tk()
+    """fenetre = Tk()
     cadre = Frame(fenetre, borderwidth=1)
     champ_label2 = Label(fenetre, text="Génération des villes aléatoires :")
     bouton_choix = Button(fenetre, text="Générer les villes", command=choix)
     champ_label2.pack()
-    bouton_choix.pack(side=RIGHT, padx=70)
-    fenetre.mainloop()
+    bouton_choix.pack(side=RIGHT, padx=70)"""
+    choix()
+    #fenetre.mainloop()
 
-    if choix == 2:
-        villes_aleatoires()
+    
+    villes_aleatoires()
 
     # on initialise la population avec 20 circuits
     pop = Population(nbpops, True)
