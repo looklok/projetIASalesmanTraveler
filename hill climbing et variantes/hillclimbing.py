@@ -68,8 +68,28 @@ class TravellingSalesmanProblem :
                 if log :
                     print("Better neighbour : {}  with cost {}".format(best_neighbour, best_cost))
                     print("Gain of : {}\n".format(current_cost - best_cost  ))
-                    current_state = best_neighbour 
-                    current_cost = best_cost
+                current_state = best_neighbour 
+                current_cost = best_cost
+
+    def randomRestartHillClimbing (self, iterations, log=False):
+
+        bestState = None
+        bestCost = np.Infinity
+
+        for i in range(iterations):
+            path = self.hillClimbing(randomInitState=True , log=False)
+            cost = self.stateCost(path)
+            if bestState is None or cost < bestCost:
+                bestCost = cost
+                bestState = path
+                if log:
+                    print(f"{i}: NEW BEST: cost {cost}")
+            else:
+                if log:
+                    print(f"{i}: Found: cost {cost}")
+
+        
+        return bestState
 
 
         

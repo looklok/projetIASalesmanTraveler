@@ -19,8 +19,8 @@ def generateInstance(num_cities, borne_inf, borne_sup):
     
 
 
-def drawHamiltonianCircuit (distanceMatrix, circuit, namePrefix="city "):
-
+def drawHamiltonianCircuit (distanceMatrix, circuit, filename ="solution", namePrefix="city "):
+    print("DRAWING ..")
     graph = pydot.Dot(graph_type='graph')
     path = circuit.copy()
     edgesInCircuit = set()
@@ -40,7 +40,11 @@ def drawHamiltonianCircuit (distanceMatrix, circuit, namePrefix="city "):
         weight = distanceMatrix[path[i-1]] [path[i]]
         graph.add_edge(pydot.Edge(namePrefix+str(path[i-1]), namePrefix+str(path[i]) ,color="red", label= str(weight)))
 
-    graph.write_png('solution.png')
+    graph.write_png(filename+'.png')
+
+    print("ENDED DRAWING")
+
+
 
 def test():
     num_cities = 5
@@ -62,9 +66,9 @@ def test():
 
 
 def main() :
-    num_cities = 10
+    num_cities = 9
     matrice = generateInstance(
-        num_cities=num_cities, borne_inf=1, borne_sup=10
+        num_cities=num_cities, borne_inf=1, borne_sup=20
     )
     print("matrice distance : ")
     for i in range(len(matrice)):
@@ -78,7 +82,16 @@ def main() :
     print("best cost :")
     print(tsp.stateCost(path))
 
-    drawHamiltonianCircuit(distanceMatrix=matrice, circuit=path)
+    drawHamiltonianCircuit(distanceMatrix=matrice, circuit=path, filename="hillclimbing")
+
+
+    path2 = tsp.randomRestartHillClimbing( iterations= 10, log=True)
+    print("Best path randomRestartHillClimbing: ")
+    print(path2)
+    print("best cost randomRestartHillClimbing :")
+    print(tsp.stateCost(path2))
+
+    drawHamiltonianCircuit(distanceMatrix=matrice, circuit=path2, filename="random_restart")
 
 if __name__ == "__main__":
 
