@@ -1,11 +1,7 @@
-import hill_climbing.hillclimbing as hill
-import Informed_search.Astar as informed
-import random
 import math
+import random
 from numpy import *
-import networkx as nx
 from matplotlib.pyplot import *
-import time
 
 
 class Ville:
@@ -155,128 +151,85 @@ def mutation(circuit):
             circuit.setVille(circuitPos1, ville2)
 
 
-def citiesToDistanceMatrix (villes):
-
-    matrice = []
-    for i in range(len(villes)):
-        distances = []
-        for j in range(len(villes)):
-            if j == i:
-                distances.append(0)
-            elif j < i:
-                distances.append(matrice[j][i])
-            else:
-                dis = villes[i].distance(villes[j])
-                distances.append(dis)
-        matrice.append(distances)
-
-    return matrice
-
 def villes_aleatoires():
-    random.seed(12)
-    tabz = around(random.rand(nbvilles, 2)*100)
+    random.seed(10)
+    tabz = random.rand(nbvilles, 2)
     for i in range(0, nbvilles):
         Villes.append(Ville(tabz[i][0], tabz[i][1]))
 
 
-def matrixToGraph (matrice) :
-    graph = nx.Graph()
-    number_of_nodes = nx.path_graph(len(matrice))
-    graph.add_nodes_from(number_of_nodes)
-    #print("number of nodes in graph: ", graph.number_of_nodes())
-
-    #add random weighted edges
-    for i in range(graph.number_of_nodes()):
-        for j in range(graph.number_of_nodes()):
-            if i != j:
-                graph.add_edge(i, j, weight=matrice[i][j])
-            
-    #print("number of edges in graph: ", graph.number_of_edges())
-
-    #print(graph.edges)
-    return graph
-
-
-
 if __name__ == '__main__':
-    
+
+    # Creation d un ensemble de villes
     Villes = []
-    nbvilles = 8 
     distancesTots = []
-    nbpops = 4             #from_=0, to=100
-    nbtours = 200       #from_=0, to=500
-    tauxMutation = 0.3      #from_=0, to=0.5
-    nbVillesaComparer = 3      #from_=0, to=20
-
-    villes_aleatoires()
-    """for v in Villes :
-        print(v.x , v.y)"""
-        
-    matrice = citiesToDistanceMatrix(Villes)
-    """for i in range(len(matrice)):
-        print(matrice[i])"""
-
-    graph = matrixToGraph (matrice) 
+    nbpops = 3             #from_=0, to=100
+    nbvilles = 4        #from_=0, to=100
+    nbtours = 100       #from_=0, to=500
+    tauxMutation = 0.4      #from_=0, to=0.5
+    nbVillesaComparer = 10      #from_=0, to=20
 
     
+    villes_aleatoires()
 
+    # on initialise la population avec 20 circuits
     pop = Population(nbpops, True)
-    print("GENETIC ALGO : ")
     print("Distance initiale : " + str(pop.getMeilleur().getDistance()))
+    
+    # Affiche le trajet du premier circuit
+    figure(1)
+    xpop = []
+    ypop = []
+    for ville in pop.circuits[0]:
+        xpop.append(ville.x)
+        ypop.append(ville.y)
+    xpop.append(xpop[0])
+    ypop.append(ypop[0])
+    plot(xpop, ypop, color='r')
+    title('Premier circuit')
+    legend()
+
+    # On fait evoluer notre population sur nbTours generations
 
     distancesTots.append(pop.getMeilleur().getDistance())
-    start_time = time.time()
     popFinales = evoluerPopulation(pop)
 
     for i in range(0, nbtours):
         popFinales = evoluerPopulation(popFinales)
         distancesTots.append(popFinales.getMeilleur().getDistance())
 
+    print(distancesTots)
+    print("Distance finale : " + str(popFinales.getMeilleur().getDistance()))
     meilleurePopulation = popFinales.getMeilleur()
-    end_time = time.time()
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
-    
-    print("Distance finale : " + str(meilleurePopulation.getDistance()))
-    print("\n\n")
 
-    tsp = hill.TravellingSalesmanProblem(num_cities=nbvilles, distanceMatrix=matrice)
+    # Affiche le trajet du meilleur circuit
+    figure(2)
+    xPopFinales = []
+    yPopFinales = []
+    for ville in meilleurePopulation.individu:
+        xPopFinales.append(ville.x)
+        yPopFinales.append(ville.y)
+    xPopFinales.append(xPopFinales[0])
+    yPopFinales.append(yPopFinales[0])
+    plot(xPopFinales, yPopFinales, color='k')
+    title('Dernier circuit')
+    legend()
 
-    start_time = time.time()
-    path = tsp.hillClimbing(randomInitState=True, log=False)
-    end_time = time.time()
+    c = 0
+    m = 0
+    while (distancesTots[m] != meilleurePopulation.getDistance()):
+        m = m + 1
+        c = m
+    print('Generation a partir de laquelle on atteint la meilleure distance : ' + str(c))
 
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
-    print("Best path simple hillClimbing: ")
-    print(path)
-    print("best cost simple hillClimbing:")
-    print(tsp.stateCost(path))
-
-
-    print("\n\n")
-    print("RANDOM RESTART Hill climbing")
-    num_iter = 10
-    print("Nombre d'itérations : " , num_iter)
-    start_time = time.time()
-    path2 = tsp.randomRestartHillClimbing( iterations= num_iter, log=False)
-    end_time = time.time()
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
-    
-    print("Best path randomRestartHillClimbing: ")
-    print(path2)
-    print("best cost randomRestartHillClimbing :")
-    print(tsp.stateCost(path2))
-
-
-    print("\n\n")
-    print("A STAR")
-
-    start_time = time.time()
-    path3 = informed.A_star(graph, log=False)
-    end_time = time.time()
-
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
-
-    print("Circuit hamiltonien", path3)
-    print("Cout total" )
-    print(tsp.stateCost(path3))
-    
+    # Affiche l evolution de la meilleure distance des circuits
+    figure(3)
+    nbTours = range(0, nbtours+1)
+    plot(nbTours, distancesTots)
+    title('Evolution des distances')
+    xlabel("Nombre de generations")
+    ylabel("Distance")
+    legend()
+    grid()
+    axvline(c, color='red')
+    show()
