@@ -155,8 +155,7 @@ def mutation(circuit):
             circuit.setVille(circuitPos1, ville2)
 
 
-def citiesToDistanceMatrix (villes):
-
+def citiesToDistanceMatrix(villes):
     matrice = []
     for i in range(len(villes)):
         distances = []
@@ -172,53 +171,51 @@ def citiesToDistanceMatrix (villes):
 
     return matrice
 
+
 def villes_aleatoires():
     random.seed(12)
-    tabz = around(random.rand(nbvilles, 2)*100)
+    tabz = around(random.rand(nbvilles, 2) * 100)
     for i in range(0, nbvilles):
         Villes.append(Ville(tabz[i][0], tabz[i][1]))
 
 
-def matrixToGraph (matrice) :
+def matrixToGraph(matrice):
     graph = nx.Graph()
     number_of_nodes = nx.path_graph(len(matrice))
     graph.add_nodes_from(number_of_nodes)
-    #print("number of nodes in graph: ", graph.number_of_nodes())
+    # print("number of nodes in graph: ", graph.number_of_nodes())
 
-    #add random weighted edges
+    # add random weighted edges
     for i in range(graph.number_of_nodes()):
         for j in range(graph.number_of_nodes()):
             if i != j:
                 graph.add_edge(i, j, weight=matrice[i][j])
-            
-    #print("number of edges in graph: ", graph.number_of_edges())
 
-    #print(graph.edges)
+    # print("number of edges in graph: ", graph.number_of_edges())
+
+    # print(graph.edges)
     return graph
 
 
-
 if __name__ == '__main__':
-    
+
     Villes = []
-    nbvilles = 8 
+    nbvilles = 5
     distancesTots = []
-    nbpops = 4             #from_=0, to=100
-    nbtours = 200       #from_=0, to=500
-    tauxMutation = 0.3      #from_=0, to=0.5
-    nbVillesaComparer = 3      #from_=0, to=20
+    nbpops = 4  # nbpop doit être inférieur à nbvilles. from_=0, to=100
+    nbtours = 200  # from_=0, to=500
+    tauxMutation = 0.3  # from_=0, to=0.5
+    nbVillesaComparer = 3  # doit être inférieur à nbvilles. from_=0, to=20
 
     villes_aleatoires()
     """for v in Villes :
         print(v.x , v.y)"""
-        
+
     matrice = citiesToDistanceMatrix(Villes)
     """for i in range(len(matrice)):
         print(matrice[i])"""
 
-    graph = matrixToGraph (matrice) 
-
-    
+    graph = matrixToGraph(matrice)
 
     pop = Population(nbpops, True)
     print("GENETIC ALGO : ")
@@ -234,49 +231,46 @@ if __name__ == '__main__':
 
     meilleurePopulation = popFinales.getMeilleur()
     end_time = time.time()
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
-    
+    print("Le temps d'exécution est de {:.5f} secondes".format(end_time - start_time))
+
     print("Distance finale : " + str(meilleurePopulation.getDistance()))
-    print("\n\n")
+    path0 = []
+    for v in meilleurePopulation.individu:
+        path0.append(Villes.index(v))
+    print("path : ", path0)
+    print("\n")
 
     tsp = hill.TravellingSalesmanProblem(num_cities=nbvilles, distanceMatrix=matrice)
 
+    print("HILL CLIMBING : ")
     start_time = time.time()
     path = tsp.hillClimbing(randomInitState=True, log=False)
     end_time = time.time()
 
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
-    print("Best path simple hillClimbing: ")
-    print(path)
-    print("best cost simple hillClimbing:")
-    print(tsp.stateCost(path))
+    print("Le temps d'exécution est de {:.5f} secondes".format(end_time - start_time))
+    print("Best path simple hillClimbing : ", path)
+    print("Best cost simple hillClimbing : ", tsp.stateCost(path))
 
-
-    print("\n\n")
-    print("RANDOM RESTART Hill climbing")
+    print("\n")
+    print("RANDOM RESTART HILL CLIMBING :")
     num_iter = 10
-    print("Nombre d'itérations : " , num_iter)
+    print("Nombre d'itérations : ", num_iter)
     start_time = time.time()
-    path2 = tsp.randomRestartHillClimbing( iterations= num_iter, log=False)
+    path2 = tsp.randomRestartHillClimbing(iterations=num_iter, log=False)
     end_time = time.time()
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
-    
-    print("Best path randomRestartHillClimbing: ")
-    print(path2)
-    print("best cost randomRestartHillClimbing :")
-    print(tsp.stateCost(path2))
+    print("Le temps d'execution est de {:.5f} secondes".format(end_time - start_time))
 
+    print("Best path randomRestartHillClimbing: ", path2)
+    print("Best cost randomRestartHillClimbing :", tsp.stateCost(path2))
 
-    print("\n\n")
-    print("A STAR")
+    print("\n")
+    print("A STAR : ")
 
     start_time = time.time()
     path3 = informed.A_star(graph, log=False)
     end_time = time.time()
 
-    print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
+    print("Le temps d'execution est {:.5f} secondes".format(end_time - start_time))
 
-    print("Circuit hamiltonien", path3)
-    print("Cout total" )
-    print(tsp.stateCost(path3))
-    
+    print("Circuit hamiltonien : ", path3)
+    print("Coût total : ", tsp.stateCost(path3))

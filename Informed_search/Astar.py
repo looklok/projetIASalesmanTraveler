@@ -10,8 +10,9 @@ class City:
         self.h = 0
         self.f = 0
         self.to_visit = []
+
     def __eq__(self, other) -> bool:
-        return self.identifiant == other.identifiant and self.to_visit == other.to_visit 
+        return self.identifiant == other.identifiant and self.to_visit == other.to_visit
 
 
 def prims_algorithm(graph):
@@ -49,18 +50,16 @@ def prims_algorithm(graph):
 
 
 def A_star(graph, log=False):
-
     frontier = []
     explored = []
 
-    initial_city = City(rd.randint(0, len(graph.nodes())-1), parent=None)
+    initial_city = City(rd.randint(0, len(graph.nodes()) - 1), parent=None)
     cities_to_visit = [initial_city.identifiant]
     for n in graph.nodes():
         cities_to_visit.append(n)
 
     initial_city.to_visit = cities_to_visit
-   
-   
+
     frontier.append(initial_city)
 
     while len(frontier) > 0:
@@ -74,11 +73,8 @@ def A_star(graph, log=False):
         frontier.pop(current_index)
         explored.append(current_city)
 
-
-
-        
         current_city.to_visit.remove(current_city.identifiant)
-        #print("To visit :  ", current_city.to_visit)
+        # print("To visit :  ", current_city.to_visit)
         # Found the goal
         if current_city.identifiant == initial_city.identifiant and len(current_city.to_visit) == 0:
             print("Taille de la frontière = ", len(frontier))
@@ -87,14 +83,14 @@ def A_star(graph, log=False):
             while current is not None:
                 path.append(current.identifiant)
                 current = current.parent
-            return path
+            return path[::-1]
 
         # Generate children
         children = []
         for id in current_city.to_visit:
             if id != current_city.identifiant:
                 city = City(identifiant=id, parent=current_city)
-                city.to_visit  = current_city.to_visit.copy()
+                city.to_visit = current_city.to_visit.copy()
                 children.append(city)
 
         # Loop through children
