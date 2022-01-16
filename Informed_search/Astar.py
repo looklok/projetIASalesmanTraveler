@@ -49,9 +49,11 @@ def prims_algorithm(graph):
     return sum(sum(mst_matrix, []))
 
 
-def A_star(graph, log=False):
+def A_star(graph, graph_search_version=False, log=False):
     frontier = []
-    explored = []
+    
+    if graph_search_version :
+        explored = []
 
     initial_city = City(rd.randint(0, len(graph.nodes()) - 1), parent=None)
     cities_to_visit = [initial_city.identifiant]
@@ -71,7 +73,9 @@ def A_star(graph, log=False):
                 current_index = index
 
         frontier.pop(current_index)
-        explored.append(current_city)
+        if graph_search_version :
+
+            explored.append(current_city)
 
         current_city.to_visit.remove(current_city.identifiant)
         # print("To visit :  ", current_city.to_visit)
@@ -103,17 +107,21 @@ def A_star(graph, log=False):
 
             # On teste si les enfants sont déjà visités
             exist = False
-            for node in explored:
-                if child == node:
-                    exist = True
+            if graph_search_version :
+                
+                for node in explored:
+                    if child == node:
+                        exist = True
 
             # On teste si les enfants sont déjà dans la frontière.
             # Si oui, on ne les rajoute pas (pour ne pas avoir de doublons)
-            for element in frontier:
-                if child == element:
-                    exist = True
-            #if not exist:
-            frontier.append(child)
+                for element in frontier:
+                    if child == element:
+                        exist = True
+            if not exist:
+                frontier.append(child)
+
+        
         if max_frontier < len(frontier):
             max_frontier = len(frontier)
         if log:
