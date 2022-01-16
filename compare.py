@@ -200,7 +200,7 @@ def matrixToGraph(matrice):
 if __name__ == '__main__':
 
     Villes = []
-    nbvilles = 15
+    nbvilles = 8
     distancesTots = []
     nbpops = 40  # nbpop doit être inférieur à nbvilles. from_=0, to=100
     nbtours = 300  # from_=0, to=500

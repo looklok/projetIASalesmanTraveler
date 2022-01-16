@@ -61,7 +61,7 @@ def A_star(graph, log=False):
     initial_city.to_visit = cities_to_visit
 
     frontier.append(initial_city)
-
+    max_frontier = 0
     while len(frontier) > 0:
         current_city = frontier[0]
         current_index = 0
@@ -77,12 +77,12 @@ def A_star(graph, log=False):
         # print("To visit :  ", current_city.to_visit)
         # Found the goal
         if current_city.identifiant == initial_city.identifiant and len(current_city.to_visit) == 0:
-            print("Taille de la frontière = ", len(frontier))
             path = []
             current = current_city
             while current is not None:
                 path.append(current.identifiant)
                 current = current.parent
+            print("La taille maximale de la frontière est :", max_frontier)
             return path[::-1]
 
         # Generate children
@@ -112,7 +112,9 @@ def A_star(graph, log=False):
             for element in frontier:
                 if child == element:
                     exist = True
-            if not exist:
-                frontier.append(child)
+            #if not exist:
+            frontier.append(child)
+        if max_frontier < len(frontier):
+            max_frontier = len(frontier)
         if log:
             print("Taille de la frontière = ", len(frontier))
