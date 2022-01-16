@@ -102,16 +102,17 @@ def A_star(graph, log=False):
             child.f = child.g + child.h
 
             # On teste si les enfants sont déjà visités
+            exist = False
             for node in explored:
                 if child == node:
-                    continue
+                    exist = True
 
             # On teste si les enfants sont déjà dans la frontière.
             # Si oui, on ne les rajoute pas (pour ne pas avoir de doublons)
             for element in frontier:
                 if child == element:
-                    continue
-
-            frontier.append(child)
+                    exist = True
+            if not exist:
+                frontier.append(child)
         if log:
             print("Taille de la frontière = ", len(frontier))

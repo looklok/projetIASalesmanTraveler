@@ -200,12 +200,12 @@ def matrixToGraph(matrice):
 if __name__ == '__main__':
 
     Villes = []
-    nbvilles = 5
+    nbvilles = 15
     distancesTots = []
-    nbpops = 4  # nbpop doit être inférieur à nbvilles. from_=0, to=100
-    nbtours = 200  # from_=0, to=500
-    tauxMutation = 0.3  # from_=0, to=0.5
-    nbVillesaComparer = 3  # doit être inférieur à nbvilles. from_=0, to=20
+    nbpops = 40  # nbpop doit être inférieur à nbvilles. from_=0, to=100
+    nbtours = 300  # from_=0, to=500
+    tauxMutation = 0.2  # from_=0, to=0.5
+    nbVillesaComparer = 15  # doit être inférieur à nbvilles. from_=0, to=20
 
     villes_aleatoires()
     """for v in Villes :

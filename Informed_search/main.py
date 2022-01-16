@@ -32,7 +32,7 @@ def main():
     #create a graph
 
     random.seed(12)
-    nb_villes = 15
+    nb_villes = 9
 
     graph = nx.Graph()
     number_of_nodes = nx.path_graph(nb_villes)
@@ -49,7 +49,7 @@ def main():
     print(graph.edges)
 
     start_time = time.time()
-    path = A_star(graph, log=False)
+    path = A_star(graph, log=True)
     end_time = time.time()
 
     print("Le temps d'execution est {:.5f} secondes".format(end_time-start_time))
